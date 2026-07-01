@@ -69,17 +69,17 @@ def search_aldi(address, lookup_item):
     input_class("e-751jof", lookup_item, wait, driver)
     
     time.sleep(3)
-    product_cards = driver.find_elements(By.CLASS_NAME, "e-egal4z")
-    for card in product_cards:
+    productCards = driver.find_elements(By.CLASS_NAME, "e-egal4z")
+    for card in productCards:
         line = card.text.split("\n")
 
         for i in range(len(line)):
-            if "Current price" in line[i]:
+            if "Current price" in line[i] and lookup_item.upper() in line[i+2].upper():
                 price = line[i].replace("Current price: $", "")
                 name = line[i+2]
                 size = line[i+3]
-                productsList.append({"name": name, "size": size, "price": price})
-    
+                productsList.append({"name": name, "size": size, "price": price})   
+
     print(productsList)
 
     input("Press Enter to close...")
