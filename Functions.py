@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import StaleElementReferenceException
 import time
 
 def button_class(class_name, wait, driver):
@@ -42,3 +43,32 @@ def input_class_no_enter(class_name, input, wait, driver):
 
 def button_success(class_name):
     print(class_name + " success")
+
+def get_address(street_address, city, state, zip_code):
+    full_address = street_address + " " + city + " " + state + " " + zip_code
+    return full_address
+
+def search(driver, phrase_list):
+    button_elements = driver.find_elements(By.TAG_NAME, "button")
+    a_elements = driver.find_elements(By.TAG_NAME, "a")
+
+    for e in button_elements + a_elements:
+        text = e.text.strip().lower()
+        for phrase in phrase_list:
+            if phrase in text:
+                e.click()
+                break
+        else:
+            continue
+        break
+
+def print_web(driver, phrase_list):
+    button_elements = driver.find_elements(By.TAG_NAME, "input")
+    a_elements = driver.find_elements(By.TAG_NAME, "a")
+
+    for e in button_elements + a_elements:
+        text = e.text.strip().lower()
+        for phrase in phrase_list:
+            if phrase in text:
+                print(e.text, e.get_attribute("class"))
+                

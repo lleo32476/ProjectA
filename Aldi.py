@@ -11,13 +11,10 @@ import sys
 import time
 import re
 
-address = "1423 Dual Highway, Hagerstown MD 21740"
-lookup_item = "soap"
-
 def search_aldi(address, lookup_item):
     options = Options()
-    #options.add_argument("--headless")
-    #options.add_argument("--window-size=1920,1080")
+    options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
     driver = webdriver.Chrome(options=options)
     driver.get("https://www.aldi.us/")
     productsList = []
@@ -29,6 +26,7 @@ def search_aldi(address, lookup_item):
 
     # open in store locations
     in_store_btn = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//button[@aria-haspopup='dialog']")))
+    print(in_store_btn)
     in_store_btn[5].click()
 
     # clicks zip code button to change address
@@ -80,9 +78,6 @@ def search_aldi(address, lookup_item):
                 size = line[i+3]
                 productsList.append({"name": name, "size": size, "price": price})   
 
-    print(productsList)
-
-    input("Press Enter to close...")
+    #input("Press Enter to close...")
     driver.quit()
-
-search_aldi(address, lookup_item)
+    return productsList

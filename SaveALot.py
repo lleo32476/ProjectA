@@ -7,36 +7,55 @@ from selenium.webdriver.common.keys import Keys
 from Functions import button_class
 from Functions import button_id
 from Functions import input_class
-from Functions import input_class_no_enter
 import sys
 import time
 import re
 
-lookup_item = "soap"
+# under works to create a scraper for all websites.
+options = Options()
+#options.add_argument("--headless")
+#options.add_argument("--window-size=1920,1080")
+driver = webdriver.Chrome(options=options)
+driver.get("https://savealot.com/")
 
-def search_savealot(street_num, street_name, city, state, zip_code, lookup_item):
-    address = f"{street_num} {street_name.lower()}, {city.lower()}, {state.lower()} {zip_code}"
-    print(address)
-    options = Options()
-    #options.add_argument("--headless")
-    #options.add_argument("--window-size=1920,1080")
-    driver = webdriver.Chrome(options=options)
-    driver.get("https://savealot.com/")
+wait = WebDriverWait(driver, 10)
 
-    wait = WebDriverWait(driver, 10)
+time.sleep(5)
 
-    time.sleep(2)
-    
-    # clicks store finder
-    button_class("wp-block-navigation-item__label", wait, driver)
+FIND_STORE_PHRASES = [
+    "select a store",
+    "change store",
+    "store finder",
+    "find a store",
+    "store locator",
+    "my store",
+    "change store",
+    "in-store"
+]
 
-    # enters in zipcode and chooses nearest store
-    input_class_no_enter("autocomplete__input autocomplete__input--default", zip_code, wait, driver)
-    button_class("autocompleteInputId__option--0", wait, driver)
+address = "1423 Dual Highway Hagerstown MD 2170"
 
-    
+## Change store
+elements = driver.find_elements(By.TAG_NAME, "a")
+for e in elements:
+    text = e.text.strip().lower()
+    for phrase in FIND_STORE_PHRASES:
+        if phrase in text:
+            e.click()
+            break
+    else:
+        continue
+    break
 
-    input("Press Enter to close...")
-    driver.quit()
+## input address
+input_class("autocomplete__input autocomplete__input--default", address, wait, driver)
+            
 
-search_savealot("1423", "Dual Highway", "Hagerstown", "MD", "21740", lookup_item)
+
+
+time.sleep(5)
+
+elements = driver.find_elements(By.TAG_NAME, "li")
+
+input("Press Enter to close...")
+driver.quit()
