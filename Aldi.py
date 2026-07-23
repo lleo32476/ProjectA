@@ -11,6 +11,9 @@ import sys
 import time
 import re
 
+address = "1423 Dual Highway Hagerstown MD 21740"
+lookup_item = "avocado"
+
 def search_aldi(address, lookup_item):
     options = Options()
     options.add_argument("--headless")
@@ -68,6 +71,7 @@ def search_aldi(address, lookup_item):
     
     time.sleep(3)
     productCards = driver.find_elements(By.CLASS_NAME, "e-egal4z")
+    print(productCards)
     for card in productCards:
         line = card.text.split("\n")
 
@@ -76,7 +80,10 @@ def search_aldi(address, lookup_item):
                 price = line[i].replace("Current price: $", "")
                 name = line[i+2]
                 size = line[i+3]
-                productsList.append({"name": name, "size": size, "price": price})   
+                store = "Aldi"
+                productsList.append({"name": name, "size": size, "price": price, "store": store})   
+    
+    print(productsList)
 
     #input("Press Enter to close...")
     driver.quit()

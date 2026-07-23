@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Program({address}){
+function SearchBar({FullAddress, onResults}){
     //variables
     const [item, setItem] = useState("");
     const [itemList, setItemList] = useState([]);
@@ -18,7 +18,7 @@ function Program({address}){
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                address: address,
+                address: FullAddress,
                 lookup_item: lookup_item,
             })
         });
@@ -26,33 +26,29 @@ function Program({address}){
         return data;
     }
 
+    const handleSearch = async () => {
+        if (!item.trim()) return;
+        const list = await store_finder(item);
+        onResults(list);
+    }
+
     return(
-        <>
+        <div className="search-bar">
             <input
                 type="text"
                 id="search_bar"
                 placeholder="Search"
+                value = {item}
+                onChange={(e) => setItem(e.target.value)}
                 onKeyDown={async (e) => {
                     if (e.key === 'Enter') {
-                        const lookup_item = readTextbox("search_bar");
-                        setItem(lookup_item)
-                        const list = await store_finder(lookup_item)
-                        setItemList(list)
+                        handleSearch();
                     }
                 }}
             ></input>
-            <button 
-                onClick = {async () => {
-                    const lookup_item = readTextbox("search_bar")
-                    setItem(lookup_item)
-                    const list = await store_finder(lookup_item)
-                    setItemList(list)
-                }}>
-                Search
-                </button>
-            <ul>{itemList.map((x, i) => <li key={i}>{x.name} - ${x.price} ({x.size})</li>)}</ul>
-        </>
+            <button onClick = {handleSearch}> Search </button>
+        </div>
     );
 }
 
-export default Program
+export default SearchBar

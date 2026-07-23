@@ -33,7 +33,7 @@ FIND_STORE_PHRASES = [
     "in-store"
 ]
 
-address = "1423 Dual Highway Hagerstown MD 2170"
+address = "21740"
 
 ## Change store
 elements = driver.find_elements(By.TAG_NAME, "a")
@@ -49,13 +49,17 @@ for e in elements:
 
 ## input address
 input_class("autocomplete__input autocomplete__input--default", address, wait, driver)
-            
-
-
-
 time.sleep(5)
+button_class("autocomplete__option", wait, driver)
 
-elements = driver.find_elements(By.TAG_NAME, "li")
+elements = driver.find_elements(By.TAG_NAME, "span")
+for e in elements:
+    text = e.text.strip().lower()
+    print(e.get_attribute("class"))
+    if "set as my store" in text:
+        e.click()
+        break
+
 
 input("Press Enter to close...")
 driver.quit()

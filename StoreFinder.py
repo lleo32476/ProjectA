@@ -78,11 +78,14 @@ def store_finder(address, lookup_item):
     print(stores)
 
     ## searches for look up item on stores nearby
+    checked_stores = []
 
     for name in stores:
         if "aldi" in name["name"].lower():
-            aldi_list = search_aldi(address, lookup_item)
-            return_list = return_list + aldi_list
+            if "aldi" not in checked_stores:
+                aldi_list = search_aldi(address, lookup_item)
+                return_list = return_list + aldi_list
+                checked_stores.append("aldi")
         else:
             print(f"No {name['name']} available right now.")
          
